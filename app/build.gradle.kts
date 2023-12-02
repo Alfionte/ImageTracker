@@ -1,4 +1,3 @@
-
 plugins {
     id("com.google.devtools.ksp")
     id("com.android.application")
@@ -74,6 +73,9 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 
+    // Play services maps
+    implementation("com.google.android.gms:play-services-maps:18.2.0")
+
     //Room
     implementation("androidx.room:room-runtime:2.6.1")
     implementation("androidx.room:room-ktx:2.6.1")
@@ -85,6 +87,10 @@ dependencies {
     ksp("com.google.dagger:hilt-android-compiler:2.48.1")
     implementation("androidx.navigation:navigation-runtime-ktx:2.7.5")
     implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
+
+    //Coil compose
+    implementation("io.coil-kt:coil-compose:2.2.2")
+    implementation("io.coil-kt:coil-svg:2.2.2")
 
     // Tests
     testImplementation("junit:junit:4.13.2")
