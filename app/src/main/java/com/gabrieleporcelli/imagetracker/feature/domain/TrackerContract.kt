@@ -9,8 +9,10 @@ sealed interface TrackerState {
 }
 
 sealed interface TrackerViewAction {
-    data object Start : TrackerViewAction
-    data object Stop : TrackerViewAction
-    data object Clean : TrackerViewAction
+    data object OnPermissionClicked : TrackerViewAction
+    data object OnPermissionSettingsClicked : TrackerViewAction
+    data object OnStart : TrackerViewAction
+    data object OnStop : TrackerViewAction
+    data object OnClean : TrackerViewAction
 }
 
