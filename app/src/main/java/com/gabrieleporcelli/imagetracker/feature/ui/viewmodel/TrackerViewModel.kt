@@ -25,9 +25,10 @@ class TrackerViewModel @Inject constructor(
         when (action) {
             TrackerViewAction.OnStart -> _state.update { TrackerState.TrackerStarted }
             TrackerViewAction.OnStop -> _state.update { TrackerState.TrackerStopped }
-            TrackerViewAction.OnClean -> TODO()
             TrackerViewAction.OnPermissionClicked -> _state.update { TrackerState.PermissionPermanentlyDenied }
             TrackerViewAction.OnPermissionSettingsClicked -> _state.update { TrackerState.TrackerStopped }
+            is TrackerViewAction.OnRetry -> TODO()
+            TrackerViewAction.OnClean -> TODO()
         }
     }
 }
