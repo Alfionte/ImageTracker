@@ -12,7 +12,8 @@ fun NavGraphBuilder.trackerScreen() {
     composable(NavScreen.TrackerScreen.route) {
         val viewModel = hiltViewModel<TrackerViewModel>()
         val state = viewModel.state.collectAsStateWithLifecycle().value
-        TrackerScreen(state) { action ->
+        val trackedImages = viewModel.trackedImages.collectAsStateWithLifecycle().value
+        TrackerScreen(state, trackedImages) { action ->
             viewModel.onAction(action)
         }
     }
