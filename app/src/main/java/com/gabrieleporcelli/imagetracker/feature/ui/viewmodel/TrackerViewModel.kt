@@ -21,6 +21,7 @@ class TrackerViewModel @Inject constructor(
         when (action) {
             TrackerViewAction.Start -> TODO()
             TrackerViewAction.Stop -> TODO()
+            TrackerViewAction.Clean -> TODO()
         }
     }
 }
