@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">Image tracker</string>
+
+    <string name="start_tracking_button">Start</string>
+    <string name="stop_tracking_button">Stop</string>
+
+    <string name="missing_location">To use the app, enable the location permission</string>
+    <string name="missing_location_button">Grant location permission</string>
+
+    <string name="missing_location_permanent">To use the app, enable the location permission from settings</string>
+    <string name="missing_location_permanent_button">Open Settings</string>
 </resources>
