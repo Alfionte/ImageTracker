@@ -1,4 +1,4 @@
-package com.gabrieleporcelli.imagetracker.feature.navigation
+package com.gabrieleporcelli.imagetracker.feature.domain.navigation
 
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle

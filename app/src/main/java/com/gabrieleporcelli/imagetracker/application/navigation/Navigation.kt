@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import com.gabrieleporcelli.imagetracker.feature.navigation.trackerScreen
+import com.gabrieleporcelli.imagetracker.feature.domain.navigation.trackerScreen
 
 @Composable
 fun Navigation() {
