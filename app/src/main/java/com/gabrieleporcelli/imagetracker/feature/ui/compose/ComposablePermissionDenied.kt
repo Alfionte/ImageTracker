@@ -2,6 +2,8 @@
 
 package com.gabrieleporcelli.imagetracker.feature.ui.compose
 
+import android.Manifest
+import android.os.Build
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,6 +26,7 @@ import com.gabrieleporcelli.imagetracker.R
 import com.gabrieleporcelli.imagetracker.application.theme.BrownDark
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionState
+import com.google.accompanist.permissions.rememberPermissionState
 
 @ExperimentalPermissionsApi
 @Composable
@@ -31,9 +34,10 @@ internal fun PermissionDenied(permissionState: PermissionState) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp), contentAlignment = Alignment.Center
+            .padding(16.dp),
+        contentAlignment = Alignment.Center
     ) {
-        Column {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Image(
                 painter = painterResource(id = R.drawable.trk_location_icon),
                 contentDescription = stringResource(R.string.missing_location),
@@ -47,7 +51,7 @@ internal fun PermissionDenied(permissionState: PermissionState) {
                 fontSize = 18.sp,
             )
             Spacer(modifier = Modifier.height(16.dp))
-            Button(modifier = Modifier.fillMaxWidth(), onClick = { permissionState.launchPermissionRequest() }) {
+            Button(modifier = Modifier.fillMaxWidth(), onClick = requestPermissions(permissionState)) {
                 Text(
                     modifier = Modifier.fillMaxWidth(),
                     text = stringResource(R.string.missing_location_button),
@@ -58,3 +62,18 @@ internal fun PermissionDenied(permissionState: PermissionState) {
         }
     }
 }
+
+@ExperimentalPermissionsApi
+@Composable
+private fun requestPermissions(permissionState: PermissionState) =
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        val notificationPermissionState = rememberPermissionState(Manifest.permission.POST_NOTIFICATIONS)
+        ({
+            notificationPermissionState.launchPermissionRequest()
+            permissionState.launchPermissionRequest()
+        })
+    } else {
+        {
+            permissionState.launchPermissionRequest()
+        }
+    }

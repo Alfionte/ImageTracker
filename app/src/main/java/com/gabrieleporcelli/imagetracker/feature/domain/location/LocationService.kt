@@ -26,6 +26,7 @@ class LocationService : Service() {
 
     @Inject
     lateinit var locationClient: LocationClient
+
     @Inject
     lateinit var saveTrackedImageUseCase: SaveTrackedImageUseCase
 
@@ -54,6 +55,7 @@ class LocationService : Service() {
             .onEach { location ->
                 if (lastLocation == null) {
                     lastLocation = location
+                    saveTrackedImage(location)
                 }
 
                 val lastLatLng = LatLng(lastLocation!!.latitude, lastLocation!!.longitude)
@@ -61,19 +63,23 @@ class LocationService : Service() {
 
                 if (computeDistanceBetween(lastLatLng, newLatLng) > LOCATION_DISTANCE_METERS) {
                     lastLocation = location
-                    saveTrackedImageUseCase.saveTrackedImage(
-                        TrackedImage(
-                            location = LatLng(
-                                location.latitude,
-                                location.longitude
-                            )
-                        )
-                    )
+                    saveTrackedImage(location)
                 }
             }
             .launchIn(serviceScope)
 
         startForeground(LOCATION_SERVICE_ID, notification.build())
+    }
+
+    private suspend fun saveTrackedImage(location: Location) {
+        saveTrackedImageUseCase.saveTrackedImage(
+            TrackedImage(
+                location = LatLng(
+                    location.latitude,
+                    location.longitude
+                )
+            )
+        )
     }
 
     private fun stop() {
@@ -93,7 +99,7 @@ class LocationService : Service() {
         const val ACTION_STOP =
             "com.gabrieleporcelli.imagetracker.feature.domain.location.LocationService.ACTION_STOP"
 
-        const val LOCATION_INTERVAL = 10000L
+        const val LOCATION_INTERVAL = 5000L
         const val LOCATION_DISTANCE_METERS = 100
     }
 }

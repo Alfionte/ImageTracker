@@ -10,6 +10,7 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
+import com.google.android.gms.location.Priority
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -29,11 +30,14 @@ class LocationClientImpl @Inject constructor(
     @SuppressLint("MissingPermission")
     override fun getLocationUpdates(interval: Long): Flow<Location> = callbackFlow {
         checkPermissions()
-        val request = LocationRequest.Builder(interval).setIntervalMillis(interval).build()
+        val request = LocationRequest.Builder(interval)
+            .setIntervalMillis(interval)
+            .setPriority(Priority.PRIORITY_HIGH_ACCURACY)
+            .build()
 
         val locationCallback = object : LocationCallback() {
             override fun onLocationResult(result: LocationResult) {
-                result.locations.lastOrNull()?.let { trySend(it) }
+                result.lastLocation?.let { trySend(it) }
             }
         }
         client.requestLocationUpdates(

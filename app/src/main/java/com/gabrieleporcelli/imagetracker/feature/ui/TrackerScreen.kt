@@ -30,7 +30,7 @@ fun TrackerScreen(
     val locationPermissionState = rememberPermissionState(android.Manifest.permission.ACCESS_FINE_LOCATION)
 
     Scaffold(
-        topBar = { TopBar(state, locationPermissionState, onAction) },
+        topBar = { TopBar(state, locationPermissionState,  onAction) },
         content = { padding -> Content(state, trackedImages, locationPermissionState, onAction, padding) },
     )
 }
