@@ -11,6 +11,7 @@ import com.gabrieleporcelli.imagetracker.core.domain.model.TrackedImage
 import com.gabrieleporcelli.imagetracker.feature.domain.usecases.SaveTrackedImageUseCase
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.SphericalUtil.computeDistanceBetween
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -20,10 +21,13 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
-class LocationService @Inject constructor(
-    private val locationClient: LocationClient,
-    private val saveTrackedImageUseCase: SaveTrackedImageUseCase,
-) : Service() {
+@AndroidEntryPoint
+class LocationService : Service() {
+
+    @Inject
+    lateinit var locationClient: LocationClient
+    @Inject
+    lateinit var saveTrackedImageUseCase: SaveTrackedImageUseCase
 
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     override fun onBind(p0: Intent?): IBinder? = null
