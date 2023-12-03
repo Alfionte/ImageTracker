@@ -11,8 +11,8 @@ import com.gabrieleporcelli.imagetracker.feature.ui.viewmodel.TrackerViewModel
 fun NavGraphBuilder.trackerScreen() {
     composable(NavScreen.TrackerScreen.route) {
         val viewModel = hiltViewModel<TrackerViewModel>()
-        val state = viewModel.state.collectAsStateWithLifecycle().value
-        val trackedImages = viewModel.trackedImages.collectAsStateWithLifecycle().value
+        val state = viewModel.state.collectAsStateWithLifecycle()
+        val trackedImages = viewModel.trackedImages.collectAsStateWithLifecycle()
         TrackerScreen(state, trackedImages) { action ->
             viewModel.onAction(action)
         }
