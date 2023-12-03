@@ -6,6 +6,7 @@ import com.gabrieleporcelli.imagetracker.core.domain.model.TrackedImage
 import com.gabrieleporcelli.imagetracker.feature.domain.TrackerState
 import com.gabrieleporcelli.imagetracker.feature.domain.TrackerViewAction
 import com.gabrieleporcelli.imagetracker.feature.domain.usecases.DeleteAllTrackedImageUseCase
+import com.gabrieleporcelli.imagetracker.feature.domain.usecases.FetchTrackedImageUseCase
 import com.gabrieleporcelli.imagetracker.feature.domain.usecases.GetTrackedImageStreamUseCase
 import com.gabrieleporcelli.imagetracker.feature.domain.usecases.SaveTrackedImageUseCase
 import com.gabrieleporcelli.imagetracker.feature.domain.usecases.UpdateTrackedImageUseCase
@@ -23,6 +24,7 @@ class TrackerViewModel @Inject constructor(
     private val getTrackedImageStreamUseCase: GetTrackedImageStreamUseCase,
     private val saveTrackedImageUseCase: SaveTrackedImageUseCase,
     private val updateTrackedImageUseCase: UpdateTrackedImageUseCase,
+    private val fetchTrackedImageUseCase: FetchTrackedImageUseCase,
 ) : ViewModel() {
 
     init {
@@ -46,39 +48,22 @@ class TrackerViewModel @Inject constructor(
             TrackerViewAction.OnStop -> _state.update { TrackerState.TrackerStopped }
             TrackerViewAction.OnPermissionClicked -> _state.update { TrackerState.PermissionPermanentlyDenied }
             TrackerViewAction.OnPermissionSettingsClicked -> _state.update { TrackerState.TrackerStopped }
-            is TrackerViewAction.OnRetry -> {
-                val retryImage = action.trackedImage
-                viewModelScope.launch {
-                    updateTrackedImageUseCase.updateTrackedImage(retryImage.copy(url = null))
-                    updateTrackedImageUseCase.updateTrackedImage(retryImage)
-                }
-            }
-
+            is TrackerViewAction.OnRetry -> fetchImages()
             TrackerViewAction.OnClean -> viewModelScope.launch { deleteAllTrackedImageUseCase.deleteAllTrackedImage() }
         }
     }
 
     private fun fetchImages() {
         viewModelScope.launch {
-            val image1 = TrackedImage(
-                LatLng(28.39223433708077, -16.61376387081628),
-                "https://images.unsplash.com/photo-1682695794947-17061dc284dd?q=80&w=2340&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-            )
-            val image2 = TrackedImage(
-                LatLng(28.39544263301374, -16.57011996777058),
-                "https://images.unsplash.com/photo-1476611338391-6f395a0ebc7b?q=80&w=2342&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-            )
-            val image3 = TrackedImage(
-                LatLng(28.386260282771687, -16.541839658410733), null
-            )
-            val image4 = TrackedImage(
-                LatLng(28.39544263301375, -16.57011996777058),
-                "https://images.unsplash.com/photo-1476611338391-6f395a0ebc7b?q=80&w=2342&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-            )
-            saveTrackedImageUseCase.saveTrackedImage(image1)
-            saveTrackedImageUseCase.saveTrackedImage(image2)
-            saveTrackedImageUseCase.saveTrackedImage(image3)
-            saveTrackedImageUseCase.saveTrackedImage(image4)
+            val image1 = fetchTrackedImageUseCase.fetchTrackedImage(LatLng(28.39223433708077, -16.61376387081628))
+            val image2 = fetchTrackedImageUseCase.fetchTrackedImage(LatLng(28.39544263301374, -16.57011996777058))
+            val image3 = fetchTrackedImageUseCase.fetchTrackedImage(LatLng(28.386260282771687, -16.541839658410733))
+            val image4 = fetchTrackedImageUseCase.fetchTrackedImage(LatLng(28.39544263301375, -16.57011996777058))
+
+            image1.getOrNull()?.let { safeImage1 -> saveTrackedImageUseCase.saveTrackedImage(safeImage1) }
+            image2.getOrNull()?.let { safeImage2 -> saveTrackedImageUseCase.saveTrackedImage(safeImage2) }
+            image3.getOrNull()?.let { safeImage3 -> saveTrackedImageUseCase.saveTrackedImage(safeImage3) }
+            image4.getOrNull()?.let { safeImage4 -> saveTrackedImageUseCase.saveTrackedImage(safeImage4) }
         }
     }
 }

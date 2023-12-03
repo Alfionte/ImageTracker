@@ -1,15 +1,21 @@
+@file:Suppress("unused")
+
 package com.gabrieleporcelli.imagetracker.feature.domain.di
 
 import com.gabrieleporcelli.imagetracker.feature.data.TrackedImageRepositoryImpl
 import com.gabrieleporcelli.imagetracker.feature.domain.repository.TrackedImageRepository
 import com.gabrieleporcelli.imagetracker.feature.domain.usecases.DeleteAllTrackedImageUseCase
 import com.gabrieleporcelli.imagetracker.feature.domain.usecases.DeleteAllTrackedImageUseCaseImpl
+import com.gabrieleporcelli.imagetracker.feature.domain.usecases.FetchTrackedImageUseCase
+import com.gabrieleporcelli.imagetracker.feature.domain.usecases.FetchTrackedImageUseCaseImpl
 import com.gabrieleporcelli.imagetracker.feature.domain.usecases.GetTrackedImageStreamUseCase
 import com.gabrieleporcelli.imagetracker.feature.domain.usecases.GetTrackedImageStreamUseCaseImpl
 import com.gabrieleporcelli.imagetracker.feature.domain.usecases.SaveTrackedImageUseCase
 import com.gabrieleporcelli.imagetracker.feature.domain.usecases.SaveTrackedImageUseCaseImpl
 import com.gabrieleporcelli.imagetracker.feature.domain.usecases.UpdateTrackedImageUseCase
 import com.gabrieleporcelli.imagetracker.feature.domain.usecases.UpdateTrackedImageUseCaseImpl
+import com.gabrieleporcelli.imagetracker.feature.domain.usecases.UrlBuilderUseCase
+import com.gabrieleporcelli.imagetracker.feature.domain.usecases.UrlBuilderUseCaseImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -43,4 +49,14 @@ abstract class ImageTrackerModule {
     abstract fun bindsDeleteAllTrackedImageUseCase(
         deleteAllTrackedImageUseCaseImpl: DeleteAllTrackedImageUseCaseImpl
     ): DeleteAllTrackedImageUseCase
+
+    @Binds
+    abstract fun fetchTrackedImageUseCase(
+        fetchTrackedImageUseCaseImpl: FetchTrackedImageUseCaseImpl
+    ): FetchTrackedImageUseCase
+
+    @Binds
+    abstract fun bindUrlBuilderUseCase(
+        urlBuilderUseCaseImpl: UrlBuilderUseCaseImpl
+    ): UrlBuilderUseCase
 }

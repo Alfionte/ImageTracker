@@ -15,11 +15,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.SubcomposeAsyncImage
+import coil.request.ImageRequest
+import coil.size.Size
 import com.gabrieleporcelli.imagetracker.R
 import com.gabrieleporcelli.imagetracker.application.theme.Yellow
 import com.gabrieleporcelli.imagetracker.core.domain.model.TrackedImage
@@ -50,6 +53,11 @@ internal fun TrackedImages(
 
 @Composable
 private fun AsyncTrackedImage(onAction: (action: TrackerViewAction) -> Unit, trackedImage: TrackedImage) {
+    val request = ImageRequest.Builder(LocalContext.current)
+        .data(trackedImage.url)
+        .size(Size(250, 250))
+        .build()
+
     SubcomposeAsyncImage(
         modifier = Modifier
             .fillMaxWidth()
@@ -66,7 +74,7 @@ private fun AsyncTrackedImage(onAction: (action: TrackerViewAction) -> Unit, tra
             }
         },
         error = { RetryImage(onAction, trackedImage) },
-        model = trackedImage.url,
+        model = request,
         contentDescription = trackedImage.url,
     )
 }
