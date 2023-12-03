@@ -1,7 +1,8 @@
 package com.gabrieleporcelli.imagetracker.feature.ui
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement.Absolute.spacedBy
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -16,14 +17,17 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.gabrieleporcelli.imagetracker.R
 import com.gabrieleporcelli.imagetracker.application.theme.BrownDark
+import com.gabrieleporcelli.imagetracker.application.theme.Yellow
 import com.gabrieleporcelli.imagetracker.core.domain.model.TrackedImage
 import com.gabrieleporcelli.imagetracker.feature.domain.TrackerState
 import com.gabrieleporcelli.imagetracker.feature.domain.TrackerViewAction
@@ -51,10 +55,10 @@ private fun Content(
     when (state) {
         TrackerState.NoPermission -> PermissionDenied(onAction)
         TrackerState.PermissionPermanentlyDenied -> PermissionDeniedPermanently(onAction)
-        TrackerState.TrackerStarted, TrackerState.TrackerStopped -> TrackedImages(
-            trackedImages,
-            onAction
-        )
+        TrackerState.TrackerStarted, TrackerState.TrackerStopped -> {
+            TrackedImages(trackedImages, onAction)
+        }
+
     }
 }
 
@@ -99,25 +103,21 @@ fun TrackedImages(
     trackedImages: List<TrackedImage>,
     onAction: (action: TrackerViewAction) -> Unit
 ) {
-    LazyColumn(content = {
-        items(trackedImages.size) { index ->
-            val trackedImage = trackedImages[index]
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(200.dp)
-                    .padding(16.dp),
-            )
-            if (trackedImage.isValid) {
-                Text(text = trackedImage.url!!)
-            } else {
-                Text(
-                    modifier = Modifier.clickable { onAction(TrackerViewAction.OnRetry(trackedImage)) },
-                    text = "Retry"
-                )
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(8.dp),
+        verticalArrangement = spacedBy(8.dp),
+        content = {
+            items(trackedImages.size) { index ->
+                val trackedImage = trackedImages[index]
+                if (trackedImage.url != null) {
+                    AsyncTrackedImage(trackedImage)
+                } else {
+                    RetryImage(onAction, trackedImage)
+                }
             }
-        }
-    })
+        })
 }
 
 
@@ -127,7 +127,7 @@ fun PermissionDenied(onAction: (action: TrackerViewAction) -> Unit) {
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp),
-        contentAlignment = androidx.compose.ui.Alignment.Center
+        contentAlignment = Alignment.Center
     ) {
         Column {
             Image(
@@ -164,11 +164,11 @@ fun PermissionDeniedPermanently(onAction: (action: TrackerViewAction) -> Unit) {
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp),
-        contentAlignment = androidx.compose.ui.Alignment.Center
+        contentAlignment = Alignment.Center
     ) {
         Column {
             Image(
-                painter = painterResource(id = R.drawable.trk_location_icon),
+                painter = painterResource(id = R.drawable.no_location_icon),
                 contentDescription = stringResource(R.string.missing_location_permanent),
             )
             Spacer(modifier = Modifier.height(16.dp))
@@ -195,3 +195,36 @@ fun PermissionDeniedPermanently(onAction: (action: TrackerViewAction) -> Unit) {
     }
 }
 
+@Composable
+private fun AsyncTrackedImage(trackedImage: TrackedImage) {
+    AsyncImage(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(Yellow)
+            .height(250.dp),
+        model = trackedImage.url,
+        contentDescription = trackedImage.url,
+    )
+}
+
+@Composable
+private fun RetryImage(
+    onAction: (action: TrackerViewAction) -> Unit,
+    trackedImage: TrackedImage
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(Yellow)
+            .height(250.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Button(onClick = { onAction(TrackerViewAction.OnRetry(trackedImage)) }) {
+            Text(
+                text = stringResource(R.string.image_retry_button),
+                textAlign = TextAlign.Center,
+                fontSize = 18.sp,
+            )
+        }
+    }
+}

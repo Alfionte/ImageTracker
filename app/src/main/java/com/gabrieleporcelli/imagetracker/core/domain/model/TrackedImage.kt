@@ -6,7 +6,5 @@ data class TrackedImage(
     val location: LatLng,
     val url: String? = null,
 ) {
-    val id: String = location.hashCode().toString()
-    val isValid: Boolean
-        get() = url != null
+    val id: Int = location.hashCode()
 }
