@@ -1,5 +1,6 @@
 package com.gabrieleporcelli.imagetracker.feature.ui
 
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
@@ -32,10 +33,11 @@ private fun Content(
     onAction: (action: TrackerViewAction) -> Unit,
     padding: PaddingValues
 ) {
-
-    when (state.value) {
-        TrackerState.NoPermission -> PermissionDenied(onAction)
-        TrackerState.PermissionPermanentlyDenied -> PermissionDeniedPermanently(onAction)
-        TrackerState.TrackerStarted, TrackerState.TrackerStopped -> TrackedImages(trackedImages, onAction)
+    Crossfade(targetState = state.value, label = "Permission CrossFade") { screenState ->
+        when (screenState) {
+            TrackerState.NoPermission -> PermissionDenied(onAction)
+            TrackerState.PermissionPermanentlyDenied -> PermissionDeniedPermanently(onAction)
+            TrackerState.TrackerStarted, TrackerState.TrackerStopped -> TrackedImages(trackedImages, onAction)
+        }
     }
 }
