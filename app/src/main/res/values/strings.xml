@@ -9,4 +9,6 @@
 
     <string name="missing_location_permanent">To use the app, enable the location permission from settings</string>
     <string name="missing_location_permanent_button">Open Settings</string>
+
+    <string name="image_retry_button">Retry</string>
 </resources>
