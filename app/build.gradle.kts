@@ -61,6 +61,9 @@ dependencies {
     implementation("androidx.compose.ui:ui:1.5.4")
     implementation("androidx.compose.ui:ui-tooling-preview:1.5.4")
 
+    // Permissions
+    implementation("com.google.accompanist:accompanist-permissions:0.32.0")
+
     //Lifecycle and Navigation
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0-rc01")
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.7.0-rc01")
@@ -76,7 +79,9 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 
     // Play services maps
+    implementation("com.google.android.gms:play-services-location:21.0.1")
     implementation("com.google.android.gms:play-services-maps:18.2.0")
+    implementation("com.google.maps.android:android-maps-utils:3.8.0")
 
     //Room
     implementation("androidx.room:room-runtime:2.6.1")

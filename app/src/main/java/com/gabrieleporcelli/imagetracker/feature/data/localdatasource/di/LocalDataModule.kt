@@ -8,6 +8,10 @@ import com.gabrieleporcelli.imagetracker.core.dispatcher.AppDispatcher
 import com.gabrieleporcelli.imagetracker.feature.data.localdatasource.TrackerImageDao
 import com.gabrieleporcelli.imagetracker.feature.data.localdatasource.TrackerImageDatabase
 import com.gabrieleporcelli.imagetracker.feature.data.localdatasource.TrackerImageLocalDataSource
+import com.gabrieleporcelli.imagetracker.feature.domain.location.LocationClient
+import com.gabrieleporcelli.imagetracker.feature.domain.location.LocationClientImpl
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -35,4 +39,17 @@ object LocalDataModule {
         dao: TrackerImageDao,
         dispatcher: AppDispatcher
     ): TrackerImageLocalDataSource = TrackerImageLocalDataSource(dao, dispatcher.io)
+
+    @Singleton
+    @Provides
+    fun provideFusedLocationClient(applicationContext: Application): FusedLocationProviderClient =
+        LocationServices.getFusedLocationProviderClient(applicationContext)
+
+    @Singleton
+    @Provides
+    fun provideLocationClient(
+        applicationContext: Application,
+        fusedLocationProviderClient: FusedLocationProviderClient
+    ): LocationClient =
+        LocationClientImpl(applicationContext, fusedLocationProviderClient)
 }

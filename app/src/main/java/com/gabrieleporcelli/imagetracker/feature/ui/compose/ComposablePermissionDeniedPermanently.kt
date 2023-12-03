@@ -1,5 +1,9 @@
 package com.gabrieleporcelli.imagetracker.feature.ui.compose
 
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import android.provider.Settings
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,6 +17,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -20,16 +25,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.gabrieleporcelli.imagetracker.R
 import com.gabrieleporcelli.imagetracker.application.theme.BrownDark
-import com.gabrieleporcelli.imagetracker.feature.domain.TrackerViewAction
 
 @Composable
-internal fun PermissionDeniedPermanently(onAction: (action: TrackerViewAction) -> Unit) {
+internal fun PermissionDeniedPermanently() {
     Box(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp),
         contentAlignment = Alignment.Center
     ) {
+        val context = LocalContext.current
+
         Column {
             Image(
                 painter = painterResource(id = R.drawable.no_location_icon),
@@ -46,7 +52,7 @@ internal fun PermissionDeniedPermanently(onAction: (action: TrackerViewAction) -
             Spacer(modifier = Modifier.height(16.dp))
             Button(
                 modifier = Modifier.fillMaxWidth(),
-                onClick = { onAction(TrackerViewAction.OnPermissionSettingsClicked) }
+                onClick = { context.openSettings() }
             ) {
                 Text(
                     modifier = Modifier.fillMaxWidth(),
@@ -57,4 +63,10 @@ internal fun PermissionDeniedPermanently(onAction: (action: TrackerViewAction) -
             }
         }
     }
+}
+
+private fun Context.openSettings() {
+    startActivity(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+        data = Uri.fromParts("package", packageName, null)
+    })
 }

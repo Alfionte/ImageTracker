@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalPermissionsApi::class, ExperimentalPermissionsApi::class)
+
 package com.gabrieleporcelli.imagetracker.feature.ui.compose
 
 import androidx.compose.foundation.Image
@@ -20,10 +22,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.gabrieleporcelli.imagetracker.R
 import com.gabrieleporcelli.imagetracker.application.theme.BrownDark
-import com.gabrieleporcelli.imagetracker.feature.domain.TrackerViewAction
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.PermissionState
 
+@ExperimentalPermissionsApi
 @Composable
-internal fun PermissionDenied(onAction: (action: TrackerViewAction) -> Unit) {
+internal fun PermissionDenied(permissionState: PermissionState) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -43,7 +47,7 @@ internal fun PermissionDenied(onAction: (action: TrackerViewAction) -> Unit) {
                 fontSize = 18.sp,
             )
             Spacer(modifier = Modifier.height(16.dp))
-            Button(modifier = Modifier.fillMaxWidth(), onClick = { onAction(TrackerViewAction.OnPermissionClicked) }) {
+            Button(modifier = Modifier.fillMaxWidth(), onClick = { permissionState.launchPermissionRequest() }) {
                 Text(
                     modifier = Modifier.fillMaxWidth(),
                     text = stringResource(R.string.missing_location_button),

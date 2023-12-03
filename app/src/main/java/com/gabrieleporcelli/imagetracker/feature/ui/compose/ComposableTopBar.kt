@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalPermissionsApi::class, ExperimentalPermissionsApi::class)
+
 package com.gabrieleporcelli.imagetracker.feature.ui.compose
 
 import androidx.compose.material.Button
@@ -11,14 +13,22 @@ import androidx.compose.ui.unit.sp
 import com.gabrieleporcelli.imagetracker.R
 import com.gabrieleporcelli.imagetracker.feature.domain.TrackerState
 import com.gabrieleporcelli.imagetracker.feature.domain.TrackerViewAction
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.PermissionState
+import com.google.accompanist.permissions.isGranted
 
+@ExperimentalPermissionsApi
 @Composable
-internal fun TopBar(state: State<TrackerState>, onAction: (action: TrackerViewAction) -> Unit) {
+internal fun TopBar(
+    state: State<TrackerState>,
+    permissionState: PermissionState,
+    onAction: (action: TrackerViewAction) -> Unit
+) {
     TopAppBar(
         title = { Text("Image Tracker App") },
         actions = {
-            when (state.value) {
-                TrackerState.TrackerStarted -> {
+            when {
+                permissionState.status.isGranted && state.value == TrackerState.TrackerStarted -> {
                     Button(
                         onClick = { onAction(TrackerViewAction.OnStop) }
                     ) {
@@ -30,7 +40,7 @@ internal fun TopBar(state: State<TrackerState>, onAction: (action: TrackerViewAc
                     }
                 }
 
-                TrackerState.TrackerStopped -> {
+                permissionState.status.isGranted && state.value == TrackerState.TrackerStopped -> {
                     Button(
                         onClick = { onAction(TrackerViewAction.OnStart) }
                     ) {
