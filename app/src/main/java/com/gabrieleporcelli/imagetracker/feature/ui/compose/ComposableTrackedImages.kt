@@ -40,7 +40,7 @@ internal fun TrackedImages(
             items(images.size) { index ->
                 val trackedImage = images[index]
                 if (trackedImage.url != null) {
-                    AsyncTrackedImage(trackedImage)
+                    AsyncTrackedImage(onAction, trackedImage)
                 } else {
                     RetryImage(onAction, trackedImage)
                 }
@@ -49,7 +49,7 @@ internal fun TrackedImages(
 }
 
 @Composable
-private fun AsyncTrackedImage(trackedImage: TrackedImage) {
+private fun AsyncTrackedImage(onAction: (action: TrackerViewAction) -> Unit, trackedImage: TrackedImage) {
     SubcomposeAsyncImage(
         modifier = Modifier
             .fillMaxWidth()
@@ -65,6 +65,7 @@ private fun AsyncTrackedImage(trackedImage: TrackedImage) {
                 CircularProgressIndicator()
             }
         },
+        error = { RetryImage(onAction, trackedImage) },
         model = trackedImage.url,
         contentDescription = trackedImage.url,
     )
