@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 @Suppress("unused")
 @Dao
 interface TrackerImageDao {
-    @Query("SELECT * FROM trackedImageEntity")
+    @Query("SELECT * FROM trackedImageEntity ORDER BY `creationTime` DESC")
     fun getAll(): Flow<List<TrackedImageEntity>>
 
     @Insert(onConflict = REPLACE)

@@ -24,29 +24,27 @@ class TrackerViewModel @Inject constructor(
     private val fetchTrackedImageUseCase: FetchTrackedImageUseCase,
 ) : ViewModel() {
 
-    /*
-    val image1 = fetchTrackedImageUseCase.fetchTrackedImage(LatLng(28.39223433708077, -16.61376387081628))
-    val image2 = fetchTrackedImageUseCase.fetchTrackedImage(LatLng(28.39544263301374, -16.57011996777058))
-    val image3 = fetchTrackedImageUseCase.fetchTrackedImage(LatLng(28.386260282771687, -16.541839658410733))
-    val image4 = fetchTrackedImageUseCase.fetchTrackedImage(LatLng(28.39544263301375, -16.57011996777058))
-    */
-
     init {
         viewModelScope.launch {
-            getTrackedImageStreamUseCase.getTrackedImageStream().collect { trackedImages ->
-                if (trackedImages.isNotEmpty()) {
-                    val lastImage = trackedImages.last()
-                    retrieveImageUrl(lastImage)
-                    _trackedImages.update { trackedImages }
+            getTrackedImageStreamUseCase
+                .getTrackedImageStream()
+                .collect { trackedImages ->
+                    val sortedImages = if (trackedImages.isNotEmpty()) {
+                        trackedImages.sortedByDescending { it.creationTime }
+                    } else {
+                        trackedImages
+                    }
+                    _trackedImages.update { sortedImages }
                 }
-            }
         }
     }
 
     private suspend fun retrieveImageUrl(trackedImage: TrackedImage) {
         if (trackedImage.url == null) {
-            val image = fetchTrackedImageUseCase.fetchTrackedImage(trackedImage.location)
-            image.getOrNull()?.let { safeImage -> updateTrackedImageUseCase.updateTrackedImage(safeImage) }
+            val image = fetchTrackedImageUseCase.fetchTrackedImage(trackedImage.location, trackedImage.creationTime)
+            image.getOrNull()?.let { safeImage ->
+                updateTrackedImageUseCase.updateTrackedImage(safeImage)
+            }
         }
     }
 

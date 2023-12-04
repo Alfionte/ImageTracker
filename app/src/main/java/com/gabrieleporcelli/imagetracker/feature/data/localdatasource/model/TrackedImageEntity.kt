@@ -9,4 +9,5 @@ data class TrackedImageEntity(
     @PrimaryKey val id: Int,
     @ColumnInfo(name = "location") val location: String,
     @ColumnInfo(name = "url") val url: String? = null,
+    @ColumnInfo(name = "creationTime") val creationTime: Long,
 )

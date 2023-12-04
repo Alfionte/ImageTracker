@@ -8,6 +8,7 @@ import androidx.core.app.NotificationCompat
 import com.gabrieleporcelli.imagetracker.R
 import com.gabrieleporcelli.imagetracker.application.TrackerApp.Companion.CHANNEL_ID
 import com.gabrieleporcelli.imagetracker.core.domain.model.TrackedImage
+import com.gabrieleporcelli.imagetracker.feature.domain.usecases.FetchTrackedImageUseCase
 import com.gabrieleporcelli.imagetracker.feature.domain.usecases.SaveTrackedImageUseCase
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.SphericalUtil.computeDistanceBetween
@@ -29,6 +30,11 @@ class LocationService : Service() {
 
     @Inject
     lateinit var saveTrackedImageUseCase: SaveTrackedImageUseCase
+
+    @Inject
+    lateinit var fetchTrackedImageUseCase: FetchTrackedImageUseCase
+
+
 
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     override fun onBind(p0: Intent?): IBinder? = null
@@ -72,14 +78,25 @@ class LocationService : Service() {
     }
 
     private suspend fun saveTrackedImage(location: Location) {
-        saveTrackedImageUseCase.saveTrackedImage(
-            TrackedImage(
-                location = LatLng(
-                    location.latitude,
-                    location.longitude
+        fetchTrackedImageUseCase.fetchTrackedImage(
+            LatLng(
+                location.latitude,
+                location.longitude,
+            ),
+            System.currentTimeMillis(),
+        ).onSuccess { trackedImage ->
+            saveTrackedImageUseCase.saveTrackedImage(trackedImage)
+        }.onFailure {
+            saveTrackedImageUseCase.saveTrackedImage(
+                TrackedImage(
+                    location = LatLng(
+                        location.latitude,
+                        location.longitude,
+                    ),
+                    creationTime = System.currentTimeMillis(),
                 )
             )
-        )
+        }
     }
 
     private fun stop() {

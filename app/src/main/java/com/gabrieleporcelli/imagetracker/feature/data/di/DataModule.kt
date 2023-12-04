@@ -15,8 +15,12 @@ import com.gabrieleporcelli.imagetracker.feature.data.remotedatasource.TrackerIm
 import com.gabrieleporcelli.imagetracker.feature.domain.location.LocationClient
 import com.gabrieleporcelli.imagetracker.feature.domain.location.LocationClientImpl
 import com.gabrieleporcelli.imagetracker.feature.domain.repository.TrackedImageRepository
+import com.gabrieleporcelli.imagetracker.feature.domain.usecases.FetchTrackedImageUseCase
+import com.gabrieleporcelli.imagetracker.feature.domain.usecases.FetchTrackedImageUseCaseImpl
 import com.gabrieleporcelli.imagetracker.feature.domain.usecases.SaveTrackedImageUseCase
 import com.gabrieleporcelli.imagetracker.feature.domain.usecases.SaveTrackedImageUseCaseImpl
+import com.gabrieleporcelli.imagetracker.feature.domain.usecases.UrlBuilderUseCase
+import com.gabrieleporcelli.imagetracker.feature.domain.usecases.UrlBuilderUseCaseImpl
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import dagger.Module
@@ -93,7 +97,7 @@ object DataModule {
 
     @Singleton
     @Provides
-    fun providesTrackerImageRepository(
+    fun provideTrackerImageRepository(
         localDataSource: TrackerImageLocalDataSource,
         remoteDataSource: TrackerImageRemoteDataSource
     ): TrackedImageRepository =
@@ -101,6 +105,21 @@ object DataModule {
 
     @Singleton
     @Provides
-    fun providesSaveTrackedImageUseCase(repository: TrackedImageRepository): SaveTrackedImageUseCase =
+    fun provideSaveTrackedImageUseCase(repository: TrackedImageRepository): SaveTrackedImageUseCase =
         SaveTrackedImageUseCaseImpl(repository)
+
+    @Singleton
+    @Provides
+    fun provideUrlBuilderUseCase(): UrlBuilderUseCase = UrlBuilderUseCaseImpl()
+
+
+    @Singleton
+    @Provides
+    fun provideFetchTrackedImageUseCase(
+        repository: TrackedImageRepository,
+        urlBuilderUseCase: UrlBuilderUseCase
+    ): FetchTrackedImageUseCase =
+        FetchTrackedImageUseCaseImpl(repository, urlBuilderUseCase)
+
+
 }

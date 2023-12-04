@@ -8,7 +8,8 @@ fun TrackedImageEntity.toDomain(): TrackedImage =
         location = location
             .split(",")
             .let { LatLng(it[0].toDouble(), it[1].toDouble()) },
-        url = url
+        url = url,
+        creationTime = creationTime
     )
 
 
@@ -16,5 +17,6 @@ fun TrackedImage.toEntity(): TrackedImageEntity =
     TrackedImageEntity(
         id = id,
         location = "${location.latitude},${location.longitude}",
-        url = url
+        url = url,
+        creationTime = creationTime
     )
