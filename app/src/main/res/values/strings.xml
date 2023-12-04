@@ -13,4 +13,5 @@
     <string name="image_retry_button">Retry</string>
     <string name="notification_title">Image Tracker</string>
     <string name="notification_text">Tracking location…</string>
+    <string name="fab_clean">Clean</string>
 </resources>

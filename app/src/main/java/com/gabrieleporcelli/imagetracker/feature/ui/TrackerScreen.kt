@@ -4,12 +4,14 @@ package com.gabrieleporcelli.imagetracker.feature.ui
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.material.FabPosition
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import com.gabrieleporcelli.imagetracker.core.domain.model.TrackedImage
 import com.gabrieleporcelli.imagetracker.feature.domain.TrackerState
 import com.gabrieleporcelli.imagetracker.feature.domain.TrackerViewAction
+import com.gabrieleporcelli.imagetracker.feature.ui.compose.Fab
 import com.gabrieleporcelli.imagetracker.feature.ui.compose.PermissionDenied
 import com.gabrieleporcelli.imagetracker.feature.ui.compose.PermissionDeniedPermanently
 import com.gabrieleporcelli.imagetracker.feature.ui.compose.TopBar
@@ -32,6 +34,8 @@ fun TrackerScreen(
     Scaffold(
         topBar = { TopBar(state, locationPermissionState,  onAction) },
         content = { padding -> Content(state, trackedImages, locationPermissionState, onAction, padding) },
+        floatingActionButtonPosition = FabPosition.End,
+        floatingActionButton = { Fab(locationPermissionState, trackedImages, onAction) }
     )
 }
 
