@@ -36,7 +36,7 @@ internal fun PermissionDeniedPermanently() {
     ) {
         val context = LocalContext.current
 
-        Column {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Image(
                 painter = painterResource(id = R.drawable.no_location_icon),
                 contentDescription = stringResource(R.string.missing_location_permanent),
